@@ -1,4 +1,4 @@
-public class Main {
+public class Main_api {
 
     public static void main(String[] args) {
         MyService myService = new MyService();
