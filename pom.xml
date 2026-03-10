@@ -10,10 +10,7 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>api</module>
-        <module>db</module>
-        <module>service</module>
-        <module>HTTPS_HW</module>
+        <module>untitled</module>
     </modules>
 
     <properties>
@@ -28,6 +25,18 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.1.0</version>
             <scope>test</scope>
+        </dependency>
+            <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+        </dependency>
+
+        <!-- Для HTTPCore (может понадобиться) -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.16</version>
         </dependency>
     </dependencies>
 
