@@ -50,6 +50,10 @@ public class Server {
                 final BufferedOutputStream out = new BufferedOutputStream(socket.getOutputStream())
         ) {
             final var requestLine = in.readLine();
+            if (requestLine == null || requestLine.isEmpty()) {
+                return;
+            }
+
             final var parts = requestLine.split(" ");
             if (parts.length != 3) {
                 return;
@@ -58,36 +62,31 @@ public class Server {
             String method = parts[0];
             String path = parts[1];
 
+            // Обработка корневого пути
+            if (path.equals("/")) {
+                path = "/index.html";
+            }
 
             Request request = new Request(method, path);
 
+            // Получаем путь без параметров для поиска в handlerHashMap
+            String pathWithoutParams = preparePath(path);
 
-            var param = request.getQueryParam("last");
-            var params = request.getQueryParams();
-
-            if (!params.isEmpty()) {
-                System.out.println(param);
-                System.out.println(params);
-            }
-            System.out.println(path);
-
-            if (!handlerHashMap.containsKey(request.getMethod())) {
-                customReponse(out, 404, "Not found");
-                return;
-            }
-
-            Map<String, Handler> handlerMap = handlerHashMap.get(request.getMethod());
-            String pathRequest = preparePath(request.getPath());
-
-            if (handlerMap.containsKey(pathRequest)) {
-                Handler handler = handlerMap.get(pathRequest);
-                handler.handle(request, out);
-            } else {
-                if (!validPaths.contains(request.getPath())) {
-                    customReponse(out, 404, "Not found");
-                } else {
-                    defaultHandle(out, path);
+            // Сначала проверяем, есть ли зарегистрированный handler
+            if (handlerHashMap.containsKey(method)) {
+                Map<String, Handler> handlerMap = handlerHashMap.get(method);
+                if (handlerMap.containsKey(pathWithoutParams)) {
+                    Handler handler = handlerMap.get(pathWithoutParams);
+                    handler.handle(request, out);
+                    return; // Важно: выходим после обработки
                 }
+            }
+
+            // Если handler не найден, проверяем статические файлы
+            if (validPaths.contains(pathWithoutParams)) {
+                defaultHandle(out, pathWithoutParams);
+            } else {
+                customReponse(out, 404, "Not found");
             }
 
         } catch (IOException | URISyntaxException e) {
