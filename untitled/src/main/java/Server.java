@@ -64,7 +64,7 @@ public class Server {
 
             // Обработка корневого пути
             if (path.equals("/")) {
-                path = "/index.html";
+                path = "/classic.html";
             }
 
             Request request = new Request(method, path);
