@@ -10,7 +10,7 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>untitled</module>
+        <module>Api</module>
     </modules>
 
     <properties>
